@@ -24,39 +24,3 @@ if (*stack != NULL)
 (*stack)->prev = top;
 *stack = top;
 }
-
-/**
- * m_pall - Prints the values of a stack_t linked list.
- * @stack: pointer to linked list stack
- * @line_number: number of line opcode occurs on
- */
-void m_pall(stack_t **stack, __attribute__ ((unused))unsigned int line_number)
-{
-stack_t *runner;
-
-runner = *stack;
-while (runner != NULL)
-{
-printf("%d\n", runner->n);
-runner = runner->next;
-}
-}
-
-/**
- * m_pint - print int a top of stack
- * @stack: pointer to linked list stack
- * @line_number: number of line opcode occurs on
- *
- */
-void m_pint(stack_t **stack, unsigned int line_number)
-{
-stack_t *runner;
-
-runner = *stack;
-if (runner == NULL)
-{
-fprintf(stderr, "L%d: can't pint, stack empty\n", line_number);
-exit(EXIT_FAILURE);
-}
-printf("%d\n", runner->n);
-}
