@@ -1,6 +1,6 @@
 #include "monty.h"
 
-void f_pchar(stack_t **head, unsigned int counter);
+void f_push(stack_t **head, unsigned int counter);
 void f_pall(stack_t **head, unsigned int counter);
 void f_pint(stack_t **head, unsigned int counter);
 void f_pop(stack_t **head, unsigned int counter);
@@ -9,34 +9,45 @@ void f_add(stack_t **head, unsigned int counter);
 void f_nop(stack_t **head, unsigned int counter);
 
 /**
- * f_pchar - prints the char at the top of the stack,
- * followed by a new line
+ * f_push - add node to the stack
  * @head: stack head
  * @counter: line_number
  * Return: no return
 */
-void f_pchar(stack_t **head, unsigned int counter)
+void f_push(stack_t **head, unsigned int counter)
 {
-stack_t *h;
+int n, j = 0, flag = 0;
 
-h = *head;
-if (!h)
+if (bus.arg)
 {
-fprintf(stderr, "L%d: can't pchar, stack empty\n", counter);
+if (bus.arg[0] == '-')
+j++;
+for (; bus.arg[j] != '\0'; j++)
+{
+if (bus.arg[j] > 57 || bus.arg[j] < 48)
+flag = 1;
+}
+if (flag == 1)
+{
+fprintf(stderr, "L%d: usage: push integer\n", counter);
 fclose(bus.file);
 free(bus.content);
 free_stack(*head);
 exit(EXIT_FAILURE);
 }
-if (h->n > 127 || h->n < 0)
+}
+else
 {
-fprintf(stderr, "L%d: can't pchar, value out of range\n", counter);
+fprintf(stderr, "L%d: usage: push integer\n", counter);
 fclose(bus.file);
 free(bus.content);
 free_stack(*head);
-exit(EXIT_FAILURE);
-}
-printf("%c\n", h->n);
+exit(EXIT_FAILURE); }
+n = atoi(bus.arg);
+if (bus.lifi == 0)
+addnode(head, n);
+else
+addqueue(head, n);
 }
 
 
