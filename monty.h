@@ -52,6 +52,7 @@ typedef struct global_variable
   FILE *file;
   int push_arg;
   char *buffer;
+  char *arg;
 } global_var;
 
 extern global_var var_global;
@@ -63,7 +64,7 @@ void run_cmd(char *filename, stack_t **stack);
 char *parse_line(char *line, stack_t **stack, unsigned int line_number);
 typedef void (*instruct_func)(stack_t **stack, unsigned int line_number);
 ssize_t getline(char **lineptr, size_t *n, FILE *stream);
-instruct_func get_op_func(char *str);
+int exect(char *content, stack_t **stack, unsigned int counter, FILE *file);
 
 /* MONTY FUNCTIONS */
 void m_pall(stack_t **stack, unsigned int line_number);
@@ -85,6 +86,7 @@ void f_add(stack_t **stack, unsigned int line_number);
 void f_mul(stack_t **stack, unsigned int line_number);
 void f_div(stack_t **stack, unsigned int line_number);
 void f_mod(stack_t **stack, unsigned int line_number);
+void addnode(stack_t **head, int n);
 
 /* WORKABILITY FUNCTIONS */
 void free_dlistint(stack_t *head);

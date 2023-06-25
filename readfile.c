@@ -1,63 +1,18 @@
 #include "monty.h"
 
 /**
- * rum_cmd - Primary function to execute a Monty bytecodes script.
- * @filename: pathname to file
- * @stack: pointer to the top of the stack
- */
-void run_cmd(char *filename, stack_t **stack)
-{
-  char *line;
-  size_t i = 0;
-  int line_count = 1;
-  instruct_func s;
-  int check;
-  int read;
-
-
-  var_global.file = fopen(filename, "r");
-
-  if (var_global.file == NULL)
-    {
-      fprintf(stderr, "Error: Can't open file %s\n", filename);
-      exit(EXIT_FAILURE);
-    }
-
-  read = getline(&var_global.buffer, &i, var_global.file);
-		 
-  while (read != -1)
-    {
-      line = parse_line(var_global.buffer, stack, line_count);
-      if (line == NULL || line[0] == '#')
-	{
-	  line_count++;
-	  continue;
-	}
-      s = get_op_func(line);
-      if (s == NULL)
-	{
-	  fprintf(stderr, "L%d: unknown instruction %s\n", line_count, line);
-	  exit(EXIT_FAILURE);
-	}
-      s(stack, line_count);
-      line_count++;
-    }
-  free(var_global.buffer);
-  check = fclose(var_global.file);
-  if (check == -1)
-    exit(-1);
-}
-
-/**
- * get_op_func -  checks opcode and returns the correct function
- * @str: the opcode
- * Return: returns a functions, or NULL on failure
+ * execute - executes the opcode
+ * @stack: head linked list - stack
+ * @counter: line_counter
+ * @file: poiner to monty file
+ * @content: line content
+ * Return: no return
  */
 
-instruct_func get_op_func(char *str)
+int exect(char *content, stack_t **stack, unsigned int counter, FILE *file)
 {
   int i;
-
+  char *op;
   instruction_t instruct[] = {
 			      {"push", m_push},
 			      {"pall", m_pall},
@@ -78,12 +33,26 @@ instruct_func get_op_func(char *str)
   };
 
   i = 0;
-  while (instruct[i].f != NULL && strcmp(instruct[i].opcode, str) != 0)
+
+  op = strtok(content, " \n\t");
+  if (op && op[0] == '#')
+    return (0);
+  var_global.arg = strtok(NULL, " \n\t");
+  while (instruct[i].opcode && op)
     {
+      if (strcmp(op, instruct[i].opcode) == 0)
+	{instruct[i].f(stack, counter);
+	  return (0);
+	}
       i++;
     }
-
-  return (instruct[i].f);
+  if (op && instruct[i].opcode == NULL)
+    { fprintf(stderr, "L%d: unknown instruction %s\n", counter, op);
+      fclose(file);
+      free(content);
+      free_dlistint(*stack);
+      exit(EXIT_FAILURE); }
+  return (1);
 }
 
 /**
