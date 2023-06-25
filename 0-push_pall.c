@@ -3,43 +3,52 @@
 #define STACK_SIZE 100
 
 int stack[STACK_SIZE];
-int top = -1; // Initialize top of stack
+int top = -1;
 
 /**
- * push_op - ...
+ * f_push - ...
  * @arg: ...
  * @line_number: ...
  */
 
-void push_op(const char *arg, int line_number) {
-    if (arg == NULL || *arg == '\0') {
+void f_push(const char *arg, int line_number)
+{
+  char *endptr;
+  int value = strtol(arg, &endptr, 10);
+
+  if (arg == NULL || *arg == '\0')
+      {
         printf("L%d: usage: push integer\n", line_number);
         exit(EXIT_FAILURE);
     }
 
-    char *endptr;
-    int value = strtol(arg, &endptr, 10); // Convert argument to integer
 
-    if (*endptr != '\0') {
+    if (*endptr != '\0')
+      {
         printf("L%d: usage: push integer\n", line_number);
         exit(EXIT_FAILURE);
     }
 
-    if (top == STACK_SIZE - 1) {
+    if (top == STACK_SIZE - 1)
+      {
         printf("Stack overflow\n");
         exit(EXIT_FAILURE);
     }
 
-    stack[++top] = value; // Push the integer onto the stack
+    stack[++top] = value;
 }
 
 /**
- * pall_op - ...
+ * f_pull - ...
  */
 
-void pall_op() {
-    if (top != -1) {
-        for (int i = top; i >= 0; i--) {
+void f_pall()
+{
+  int i;
+  if (top != -1)
+      {
+        for (i = top; i >= 0; i--)
+	  {
             printf("%d\n", stack[i]);
         }
     }
